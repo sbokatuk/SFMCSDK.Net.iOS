@@ -258,10 +258,12 @@ jobs:
           if [ "${{ matrix.sdk-band }}" = "net10" ]; then
             build_dir="${RUNNER_TEMP}/sdk10"
           fi
+          # The band is selected through the project's own property rather than --framework: the
+          # sample declares a single target framework, so --framework can only ever name the one
+          # it already builds, and anything else fails restore before the linker is reached.
           ( cd "${build_dir}" && dotnet build "${GITHUB_WORKSPACE}/samples/SFMCSDK.Net.iOS.Example/SFMCSDK.Net.iOS.Example.csproj" \
             --configuration Release \
-            --framework "${tfm}" \
-            -p:SfmcSdkBand="${{ matrix.sdk-band }}" \
+            -p:SfmcSampleTargetFramework="${tfm}" \
             -p:RuntimeIdentifier=ios-arm64 \
             -p:EnableCodeSigning=false \
             -p:SfmcPackageVersion="${{ inputs.version }}" )
