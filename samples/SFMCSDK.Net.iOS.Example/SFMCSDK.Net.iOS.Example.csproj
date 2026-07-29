@@ -1,7 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net10.0-ios26.0</TargetFrameworks>
+		<!--
+		  Which of the package's target frameworks the sample is built against. Overriding
+		  TargetFramework directly, or asking the CLI for a framework the project does not declare,
+		  breaks restore - so the choice goes through a property of our own, the same way the
+		  device tests project does it.
+		-->
+		<SfmcSampleTargetFramework Condition=" '$(SfmcSampleTargetFramework)' == '' ">net10.0-ios26.0</SfmcSampleTargetFramework>
+		<TargetFramework>$(SfmcSampleTargetFramework)</TargetFramework>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>SFMCSDK.Net.iOS.Example</RootNamespace>
