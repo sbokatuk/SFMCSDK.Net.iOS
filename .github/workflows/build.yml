@@ -154,10 +154,16 @@ jobs:
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: |
+            9.0.x
+            10.0.x
 
       - name: Install MAUI workload
-        run: dotnet workload install maui-ios
+        run: |
+          mkdir -p "${RUNNER_TEMP}/sdk10"
+          ( cd "${RUNNER_TEMP}/sdk10" \
+            && dotnet new globaljson --sdk-version "$(dotnet --list-sdks | grep '^10\.' | tail -1 | cut -d' ' -f1)" --force \
+            && dotnet workload install maui-ios )
 
       - name: Download packages
         uses: actions/download-artifact@v4
@@ -171,12 +177,14 @@ jobs:
       # binding could silently break.
       #
       # Debug, and pinned to the simulator, because this is a compile check and nothing here ships.
+      # Run from a .NET 10-pinned scratch directory: the sample targets net10, while the repository
+      # root's global.json intentionally keeps the default SDK on 9.x for the pack/test legs.
       - name: Build the sample against the packed packages
         run: |
-          dotnet build samples/SFMCSDK.Net.iOS.Example/SFMCSDK.Net.iOS.Example.csproj \
-            --configuration Debug \
-            -p:RuntimeIdentifier=iossimulator-arm64 \
-            -p:SfmcPackageVersion="${{ inputs.version }}"
+          ( cd "${RUNNER_TEMP}/sdk10" && dotnet build "${GITHUB_WORKSPACE}/samples/SFMCSDK.Net.iOS.Example/SFMCSDK.Net.iOS.Example.csproj" \
+              --configuration Debug \
+              -p:RuntimeIdentifier=iossimulator-arm64 \
+              -p:SfmcPackageVersion="${{ inputs.version }}" )
 
   # The Debug sample above restores, resolves and links, but never runs the linker or the AOT
   # compiler — and those are what a consumer actually ships. The sibling repositories carry a Release
