@@ -1,0 +1,8 @@
+# SHA-256 pins for every native framework binary this repository binds.
+#
+# Verified by build/FetchXcFrameworks.sh before anything lands in libs/. Keys are
+# <Framework>-<version>/<xcframework slice>. Regenerate with build/UpdateChecksums.sh after a
+# version bump; a hash that changes for an UNCHANGED version is the tampering event these pins
+# exist to catch.
+SFMCSDK-4.0.1/ios-arm64 f68e2143014e68272ddc218f132534fc255d5c3806bbe301b678c267103cc338
+SFMCSDK-4.0.1/ios-arm64_x86_64-simulator 1c18d47010ab346c6212ce7d01a2a07215ed072724e854866bb1bd36ce14d2b3

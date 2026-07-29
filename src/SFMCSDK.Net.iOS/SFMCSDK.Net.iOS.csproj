@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <SfmcFramework>SFMCSDK</SfmcFramework>
+    <SfmcPackageId>SFMCSDK.Net.iOS</SfmcPackageId>
+    <Description>.NET for iOS bindings for the Salesforce Marketing Cloud SFMCSDK core framework - identity, event tracking, logging and the module plumbing the MobilePush module plugs into. Successor to the sfmc-net-bindings-mobile packages, at the Unified SDK generation.</Description>
+  </PropertyGroup>
+
+  <Import Project="../Sfmc.Binding.props" />
+
+</Project>

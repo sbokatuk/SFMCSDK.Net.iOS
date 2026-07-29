@@ -1,0 +1,20 @@
+# What the upstream-drift workflow watches, and the single source of truth for it.
+#
+# build/check-upstream.sh reads this; it knows how to query each ecosystem but nothing about which
+# components this repository binds. Adding a native SDK means adding a row here.
+#
+# Columns are single-tab-separated.
+#   group    reporting group - one GitHub issue per group, titled with this text
+#   label    how the component is named inside the issue
+#   kind     cocoapods | maven | github-release | github-tag
+#   pin      the MSBuild property in Directory.Build.props holding the pinned version
+#   locator  kind-specific: pod name, groupId:artifactId[:packaging][@repo], or owner/repo
+#   confirm  download URL template with {version}, or "-" to derive it from the locator
+#
+# github-tag rather than cocoapods, although the pod (MarketingCloud-SFMCSdk) exists: the tag is
+# what FetchXcFrameworks.sh downloads, so the check confirms the thing the build consumes. Note
+# the CocoaPods pod literally named "SFMCSDK" is an unrelated squatter - never resolve by that
+# name.
+#
+# group	label	kind	pin	locator	confirm
+SFMCSDK iOS	sfmc-sdk-ios	github-tag	SfmcNativeVersion	salesforce-marketingcloud/sfmc-sdk-ios	https://github.com/salesforce-marketingcloud/sfmc-sdk-ios/archive/refs/tags/v{version}.zip

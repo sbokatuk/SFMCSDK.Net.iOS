@@ -1,0 +1,24 @@
+# The package set, and the single source of truth for it.
+#
+# BuildNugets.sh packs in this order, the release and PR workflows generate their package tables
+# from it, and run-simulator-tests.sh clears the local NuGet cache for every id listed here.
+# Adding a package means adding a row here and a project under src/ - nothing else has a second
+# copy of the list to fall out of step with.
+#
+# package-id	framework	deps (this repo's package ids, or -)
+SFMCSDK.Net.iOS	SFMCSDK	-
+
+# ----------------------------------------------------------------------------------------------
+# NOT BOUND, and why.
+#
+#   MarketingCloudSDK        The MobilePush umbrella framework. Bound by the sibling repository,
+#   AppGroupSDK              MarketingCloudSDK.Net.iOS (which also carries AppGroupSDK, the
+#                            internal framework MobilePush v11 requires), depending on this
+#                            package for the core - mirroring the native package manifests.
+#
+#   PushFeatureSDK           The modular feature frameworks of the Unified SDK generation
+#   IAMFeatureSDK            (push-feature-sdk-ios, iam-feature-sdk-ios, mam-core-sdk-ios).
+#   MAMCoreSDK               Salesforce's integration docs route apps through the umbrella
+#                            MarketingCloudSDK, which is what the sibling repository binds;
+#                            these become packages of their own once a consumer needs one
+#                            directly.

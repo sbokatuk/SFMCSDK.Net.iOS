@@ -1,0 +1,53 @@
+<Project>
+
+  <PropertyGroup>
+    <!--
+      Package versions are <SFMCSDK version>.<binding revision>, e.g. 4.0.1.1.
+
+      The first three components are the native Salesforce SFMCSDK framework inside the package,
+      which is also what upstream tags its releases with (v4.0.1 in
+      salesforce-marketingcloud/sfmc-sdk-ios). The fourth belongs to this repository and
+      increments whenever the bindings or packaging change while the native framework stays put.
+    -->
+    <SfmcNativeVersion>4.0.1</SfmcNativeVersion>
+    <SfmcBindingRevision>1</SfmcBindingRevision>
+    <VersionPrefix>$(SfmcNativeVersion).$(SfmcBindingRevision)</VersionPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>s.bokatuk</Authors>
+    <Company>s.bokatuk</Company>
+    <Copyright>Copyright © s.bokatuk</Copyright>
+    <PackageProjectUrl>https://github.com/sbokatuk/SFMCSDK.Net.iOS</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sbokatuk/SFMCSDK.Net.iOS</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <!--
+      One expression for every package: the binding source in this repository is MIT, and the
+      native SFMCSDK framework built by Salesforce ships under its BSD-3-Clause licence (see
+      licenses/ for the texts that are packed).
+    -->
+    <PackageLicenseExpression>MIT AND BSD-3-Clause</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild Condition=" '$(GITHUB_ACTIONS)' == 'true' ">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <!--
+    Surface the curated release notes on nuget.org. docs/release-notes/<version>.md already feeds
+    the GitHub release; packing it here is what makes it reach the .nupkg. A version with no
+    curated file - a PR prerelease of unreleased work, typically - falls back to the releases page
+    rather than shipping nothing.
+  -->
+  <PropertyGroup>
+    <SfmcReleaseNotesFile>$(MSBuildThisFileDirectory)docs/release-notes/$(VersionPrefix).md</SfmcReleaseNotesFile>
+    <PackageReleaseNotes Condition=" Exists('$(SfmcReleaseNotesFile)') ">$([System.IO.File]::ReadAllText('$(SfmcReleaseNotesFile)'))</PackageReleaseNotes>
+    <PackageReleaseNotes Condition=" '$(PackageReleaseNotes)' == '' ">https://github.com/sbokatuk/SFMCSDK.Net.iOS/releases/tag/v$(VersionPrefix)</PackageReleaseNotes>
+  </PropertyGroup>
+
+</Project>
