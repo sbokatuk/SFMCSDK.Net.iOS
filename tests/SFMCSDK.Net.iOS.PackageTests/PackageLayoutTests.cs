@@ -163,7 +163,17 @@ public class PackageLayoutTests
         using var package = OpenPackage(id);
 
         Assert.True(package.GetEntry("icon.png") is not null, "icon.png is referenced but not packed.");
-        Assert.True(package.GetEntry("README.md") is not null, "README.md is referenced but not packed.");
+
+        // Not just present - substantial. A nupkg built from a tree whose README was a placeholder
+        // ships that placeholder as the package's nuget.org landing page, and an entry-exists check
+        // passes on it happily. The floor is far below the real README's size and far above any
+        // plausible stub.
+        var readme = package.GetEntry("README.md");
+        Assert.True(readme is not null, "README.md is referenced but not packed.");
+        Assert.True(
+            readme.Length > 2_000,
+            $"README.md is only {readme.Length} bytes - that is a placeholder, not this package's "
+            + "nuget.org landing page.");
 
         using var bindings = new StreamReader(ReadEntry(package, "licenses/LICENSE"));
         Assert.Contains("MIT License", bindings.ReadToEnd(), StringComparison.OrdinalIgnoreCase);
@@ -270,21 +280,56 @@ public class PackageLayoutTests
         return [.. specs];
     }
 
+    /// <summary>
+    /// Opens the package for <paramref name="id"/> from the artifacts directory.
+    /// </summary>
+    /// <remarks>
+    /// The version is discovered rather than named: pull-request runs pack a
+    /// <c>-beta.&lt;pr&gt;.&lt;run&gt;</c> version that no file in the repository knows, so matching
+    /// against Directory.Build.props would fail every beta validation. <c>SFMC_PACKAGE_VERSION</c>
+    /// pins it explicitly where a caller does know.
+    ///
+    /// artifacts/ is scratch that accumulates across revisions, so more than one version can match.
+    /// That used to surface as "Sequence contains more than one matching element" out of a LINQ
+    /// helper - a message that says nothing about packages and sends the reader into this file - so
+    /// it now names the matches and what to do about them.
+    /// </remarks>
     private static ZipArchive OpenPackage(string id, string extension = ".nupkg")
     {
-        var matches = Directory.GetFiles(ArtifactsDirectory, $"{id}.*{extension}");
+        if (Environment.GetEnvironmentVariable("SFMC_PACKAGE_VERSION") is { Length: > 0 } pinned)
+        {
+            var named = Path.Combine(ArtifactsDirectory, $"{id}.{pinned}{extension}");
 
-        var package = matches.SingleOrDefault(path =>
-            Path.GetFileName(path).StartsWith($"{id}.", StringComparison.Ordinal) &&
-            char.IsDigit(Path.GetFileName(path)[id.Length + 1]));
+            return File.Exists(named)
+                ? ZipFile.OpenRead(named)
+                : throw new FileNotFoundException(
+                    $"'{named}' does not exist (SFMC_PACKAGE_VERSION={pinned}). Run ./build/BuildNugets.sh first.",
+                    named);
+        }
 
-        if (package is null)
+        var matches = Directory.GetFiles(ArtifactsDirectory, $"{id}.*{extension}")
+            .Where(path =>
+                Path.GetFileName(path).StartsWith($"{id}.", StringComparison.Ordinal) &&
+                char.IsDigit(Path.GetFileName(path)[id.Length + 1]))
+            .ToArray();
+
+        if (matches.Length == 0)
         {
             throw new FileNotFoundException(
                 $"No {id}{extension} in {ArtifactsDirectory}. Run ./build/BuildNugets.sh first.");
         }
 
-        return ZipFile.OpenRead(package);
+        if (matches.Length > 1)
+        {
+            throw new InvalidOperationException(
+                $"{ArtifactsDirectory} holds {matches.Length} versions of {id}{extension}: "
+                + string.Join(", ", matches.Select(Path.GetFileName).Order())
+                + ". Which one the suite should validate is ambiguous - delete the stale ones "
+                + "(rm -f artifacts/*.nupkg artifacts/*.snupkg && ./build/BuildNugets.sh) or set "
+                + "SFMC_PACKAGE_VERSION to the one you mean.");
+        }
+
+        return ZipFile.OpenRead(matches[0]);
     }
 
     private static MemoryStream ReadEntry(ZipArchive archive, string path)
