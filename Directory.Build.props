@@ -10,7 +10,7 @@
       increments whenever the bindings or packaging change while the native framework stays put.
     -->
     <SfmcNativeVersion>4.0.1</SfmcNativeVersion>
-    <SfmcBindingRevision>1</SfmcBindingRevision>
+    <SfmcBindingRevision>2</SfmcBindingRevision>
     <VersionPrefix>$(SfmcNativeVersion).$(SfmcBindingRevision)</VersionPrefix>
   </PropertyGroup>
 

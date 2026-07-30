@@ -74,5 +74,33 @@ public static class SmokeTests
                 ?? throw new InvalidOperationException("SFMCSdk.identity returned null.");
             return Task.CompletedTask;
         }),
+
+        new("identity_edit_accepts_a_profile_id", async () =>
+        {
+            // The block bridge with the most moving parts: editWithIdentity: hands the native
+            // modifier into a managed block, which sets a property through a native selector
+            // and hands the modifier back. This is exactly what crashed on the .NET 10 managed
+            // static registrar while the block was typed with the abstract [Model] class
+            // ("Cannot create an instance of SFMCSDK.SFIdentityModifier").
+            //
+            // WHEN the updater runs is the SDK's business: identity edits go through its
+            // operation queue, and with the empty configuration here - no active modules - the
+            // invocation can be deferred rather than inline (observed: inline on the net10 leg,
+            // deferred on net8). So the call crossing the bridge without throwing is the
+            // assertion; the invocation is awaited opportunistically, because when it does run,
+            // a broken trampoline kills the process rather than failing softly.
+            var invoked = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            SFMCSdk.Identity.Edit(modifier =>
+            {
+                modifier.ProfileId = "smoke-test-profile-id";
+                invoked.TrySetResult();
+                return modifier;
+            });
+
+            var completed = await Task.WhenAny(invoked.Task, Task.Delay(TimeSpan.FromSeconds(10)));
+            Reporter(completed == invoked.Task
+                ? "Identity.Edit round-tripped the native modifier"
+                : "Identity.Edit crossed the bridge; the SDK queued the updater for later (no active modules)");
+        }),
     ];
 }
