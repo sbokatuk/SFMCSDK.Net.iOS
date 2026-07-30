@@ -74,5 +74,29 @@ public static class SmokeTests
                 ?? throw new InvalidOperationException("SFMCSdk.identity returned null.");
             return Task.CompletedTask;
         }),
+
+        new("identity_edit_accepts_a_profile_id", () =>
+        {
+            // The block bridge with the most moving parts: editWithIdentity: hands the native
+            // modifier into a managed block, which sets a property through a native selector
+            // and hands the modifier back. This is exactly what crashed on the .NET 10 managed
+            // static registrar while the block was typed with the abstract [Model] class
+            // ("Cannot create an instance of SFMCSDK.SFIdentityModifier").
+            var edited = false;
+            SFMCSdk.Identity.Edit(modifier =>
+            {
+                modifier.ProfileId = "smoke-test-profile-id";
+                edited = true;
+                return modifier;
+            });
+
+            if (!edited)
+            {
+                throw new InvalidOperationException("Identity.Edit never invoked the updater block.");
+            }
+
+            Reporter("Identity.Edit round-tripped the native modifier");
+            return Task.CompletedTask;
+        }),
     ];
 }

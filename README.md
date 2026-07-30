@@ -61,7 +61,7 @@ What changed at v4, for consumers of the old 1.x packages: the identity class is
 ## Installing
 
 ```xml
-<PackageReference Include="SFMCSDK.Net.iOS" Version="4.0.1.1" />
+<PackageReference Include="SFMCSDK.Net.iOS" Version="4.0.1.2" />
 ```
 
 Target frameworks: `net8.0-ios18.0`, `net9.0-ios18.0`, `net10.0-ios26.0`. Floor: **iOS 12.2** (the framework is Swift and relies on the OS Swift runtime, ABI-stable from 12.2 — Salesforce's own podspec says 12.0, which predates that line).
@@ -89,7 +89,7 @@ Each .NET SDK's iOS workload builds two target frameworks, so [build/BuildNugets
 
 ```sh
 ./build/FetchXcFrameworks.sh          # populate ./libs, checksum-verified
-./build/BuildNugets.sh                # packs 4.0.1.1 into ./artifacts
+./build/BuildNugets.sh                # packs 4.0.1.2 into ./artifacts
 dotnet test tests/SFMCSDK.Net.iOS.PackageTests
 ```
 
@@ -97,7 +97,7 @@ dotnet test tests/SFMCSDK.Net.iOS.PackageTests
 
 ```sh
 dotnet test tests/SFMCSDK.Net.iOS.PackageTests
-./.github/scripts/run-simulator-tests.sh 4.0.1.1 net9.0-ios18.0
+./.github/scripts/run-simulator-tests.sh 4.0.1.2 net9.0-ios18.0
 ```
 
 The simulator tests run without credentials on purpose: the native SDK loads, reports its version, initializes standalone and answers state and identity reads. One verified upstream behaviour they encode: with zero modules configured, `initializeSdk`'s completion block never fires — it reports per-module statuses, and there are none.

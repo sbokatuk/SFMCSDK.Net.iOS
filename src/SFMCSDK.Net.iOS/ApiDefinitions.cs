@@ -788,12 +788,18 @@ interface SFIdentity
 	string ToJson ();
 
 	// -(void)editWithIdentity:(id<SFIdentityModifier> _Nonnull (^ _Nonnull)(id<SFIdentityModifier> _Nonnull))updater;
-	// The block is typed with the [Model] class rather than the I-interface: the .NET 10 binding
-	// generator refuses a protocol interface inside a block trampoline (CS1503 in
-	// Trampolines.g.cs), while the NSObject-derived model class trampolines on every band. The
-	// object handed in at runtime is the native modifier either way.
+	// The block is typed with plain NSObject and kept internal; the public
+	// Edit (Func<ISFIdentityModifier, ISFIdentityModifier>) lives in SFIdentity.Additions.cs.
+	// Neither generated typing works across every band: the .NET 10 binding generator refuses a
+	// protocol interface inside a block trampoline (CS1503 in Trampolines.g.cs), and typing the
+	// block with the [Model] class makes the .NET 10 managed static registrar try to construct
+	// the abstract model class for the native modifier the block receives ("Cannot create an
+	// instance of SFMCSDK.SFIdentityModifier because it is an abstract class"). NSObject
+	// trampolines on every band; the addition wraps the handle in the protocol wrapper, which
+	// calls the native selectors.
+	[Internal]
 	[Export ("editWithIdentity:")]
-	void Edit (Func<SFIdentityModifier, SFIdentityModifier> updater);
+	void _Edit (Func<NSObject, NSObject> updater);
 
 	// -(id<SFIdentityInfo> _Nullable)get __attribute__((warn_unused_result("")));
 	[Export ("get")]
