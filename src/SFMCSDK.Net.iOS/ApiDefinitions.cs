@@ -274,7 +274,10 @@ interface SFMCSdkAppVersionChanged
 
 // SWIFT_CLASS_NAMED("AppWillResignActive")
 // @interface SFMCSdkAppWillResignActive : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkAppWillResignActive
 {
 }
