@@ -243,31 +243,46 @@ interface SFMCSdkBehavior
 }
 
 // @interface SFMCSdkAppBackgrounded : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkAppBackgrounded
 {
 }
 
 // @interface SFMCSdkAppBecameActive : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkAppBecameActive
 {
 }
 
 // @interface SFMCSdkAppForegrounded : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkAppForegrounded
 {
 }
 
 // @interface SFMCSdkAppTerminated : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkAppTerminated
 {
 }
 
 // @interface SFMCSdkAppVersionChanged : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkAppVersionChanged
 {
 }
@@ -3281,7 +3296,10 @@ interface SFMCSdkLogger : Logger
 }
 
 // @interface SFMCSdkScreenEntry : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkScreenEntry
 {
 }
