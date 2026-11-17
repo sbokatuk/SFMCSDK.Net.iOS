@@ -287,6 +287,72 @@ public static class SmokeTests
             return Task.CompletedTask;
         }),
 
+        new("engagement_events_are_built_by_their_initializers", () =>
+        {
+            // The cart, order and catalog object events each have exactly one initializer, and
+            // from 5.0.0.1 the binding offers nothing else: the parameterless constructors it
+            // used to generate called an -init the header marks unavailable, which traps. So
+            // build every one the way a caller now has to, and read it back.
+            var attributes = new NSDictionary<NSString, NSObject>(new NSString("colour"), new NSString("red"));
+            var lineItem = new SFMCSdkLineItem("product", "sku-1", 2, new NSDecimalNumber("9.99"), "EUR", attributes);
+            var order = new SFMCSdkOrder("order-1", [lineItem], new NSDecimalNumber("19.98"), "EUR", attributes);
+            var related = new NSDictionary<NSString, NSArray<NSString>>(
+                new NSString("category"), NSArray<NSString>.FromNSObjects(new NSString("shoes")));
+            var catalogObject = new SFMCSdkCatalogObject("product", "sku-1", attributes, related);
+
+            SFMCSdkCartEvent[] cartEvents =
+            [
+                new SFMCSdkAddToCartEvent(lineItem),
+                new SFMCSdkRemoveFromCartEvent(lineItem),
+                new SFMCSdkReplaceCartEvent([lineItem, lineItem]),
+            ];
+            SFMCSdkOrderEvent[] orderEvents =
+            [
+                new SFMCSdkPurchaseOrderEvent(order), new SFMCSdkPreorderEvent(order),
+                new SFMCSdkCancelOrderEvent(order), new SFMCSdkShipOrderEvent(order),
+                new SFMCSdkDeliverOrderEvent(order), new SFMCSdkReturnOrderEvent(order),
+                new SFMCSdkExchangeOrderEvent(order),
+            ];
+            SFMCSdkCatalogObjectEvent[] catalogEvents =
+            [
+                new SFMCSdkViewCatalogObjectEvent(catalogObject), new SFMCSdkViewCatalogObjectDetailEvent(catalogObject),
+                new SFMCSdkQuickViewCatalogObjectEvent(catalogObject), new SFMCSdkFavoriteCatalogObjectEvent(catalogObject),
+                new SFMCSdkShareCatalogObjectEvent(catalogObject), new SFMCSdkReviewCatalogObjectEvent(catalogObject),
+                new SFMCSdkCommentCatalogObjectEvent(catalogObject),
+            ];
+
+            foreach (var cartEvent in cartEvents)
+            {
+                var expected = cartEvent is SFMCSdkReplaceCartEvent ? 2 : 1;
+                Expect(cartEvent.LineItems.Length == expected && cartEvent.LineItems[0].CatalogObjectId == "sku-1" &&
+                       cartEvent.LineItems[0].Quantity == 2,
+                    $"{cartEvent.GetType().Name} did not round-trip its line items");
+            }
+
+            foreach (var orderEvent in orderEvents)
+            {
+                Expect(orderEvent.Order.Id == "order-1" && orderEvent.Order.LineItems.Length == 1,
+                    $"{orderEvent.GetType().Name} did not round-trip its order");
+            }
+
+            foreach (var catalogEvent in catalogEvents)
+            {
+                Expect(catalogEvent.CatalogObject.Id == "sku-1" && catalogEvent.CatalogObject.Type == "product",
+                    $"{catalogEvent.GetType().Name} did not round-trip its catalog object");
+            }
+
+            SFMCSdkEngagementEvent[] all = [.. cartEvents, .. orderEvents, .. catalogEvents];
+            foreach (var engagementEvent in all)
+            {
+                Expect(!string.IsNullOrEmpty(engagementEvent.Name) && !string.IsNullOrEmpty(engagementEvent.Id) &&
+                       engagementEvent.Category == SFMCSdkEventCategory.Engagement,
+                    $"{engagementEvent.GetType().Name} reports name '{engagementEvent.Name}', category {engagementEvent.Category}");
+            }
+
+            Reporter($"{all.Length} engagement events built: {string.Join(", ", all.Select(e => e.Name))}");
+            return Task.CompletedTask;
+        }),
+
         new("string_constants_read", () =>
         {
             // The constant holders are classes with static string properties. Reading every one
