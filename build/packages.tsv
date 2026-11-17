@@ -13,7 +13,7 @@ SFMCSDK.Net.iOS	SFMCSDK	-
 #
 #   MarketingCloudSDK        The MobilePush umbrella framework. Bound by the sibling repository,
 #   AppGroupSDK              MarketingCloudSDK.Net.iOS (which also carries AppGroupSDK, the
-#                            internal framework MobilePush v11 requires), depending on this
+#                            internal framework MobilePush requires), depending on this
 #                            package for the core - mirroring the native package manifests.
 #
 #   PushFeatureSDK           The modular feature frameworks of the Unified SDK generation
@@ -22,3 +22,12 @@ SFMCSDK.Net.iOS	SFMCSDK	-
 #                            MarketingCloudSDK, which is what the sibling repository binds;
 #                            these become packages of their own once a consumer needs one
 #                            directly.
+#
+#   InboxFeatureSDK          The Inbox feature module (inbox-feature-sdk-ios), first published as
+#                            1.0.0 alongside SFMCSDK 5.0.0. A separate framework that nothing
+#                            here or in MobilePush 12's package manifest depends on, and not
+#                            bound yet. This package carries the half the core shares with it:
+#                            the Inbox models and events, and SFMCSdkConfigBuilder.SetInboxFeature,
+#                            which is of no use from .NET until the module that supplies its
+#                            configuration is bound too. It becomes a package of its own once a
+#                            consumer needs Inbox.
