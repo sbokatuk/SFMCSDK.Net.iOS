@@ -26,6 +26,22 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">12.2</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
+	<!--
+	  Keychain access on the simulator. The SFMC SDK keeps its keys in the keychain and does not
+	  initialize without it - silently: no completion block, no identity edits. A simulator app
+	  with no entitlements is refused the keychain (errSecMissingEntitlement, -34018), and that
+	  is how the .NET 8 and .NET 9 iOS workloads build one; the .NET 10 workload embeds simulated
+	  entitlements by itself. CodesignRequireProvisioningProfile is off because asking for
+	  entitlements otherwise sends the .NET 8/9 workloads looking for a provisioning profile.
+
+	  Device builds are untouched: they are signed with a profile, which carries the application
+	  identifier the keychain needs.
+	-->
+	<PropertyGroup Condition=" '$(RuntimeIdentifier)' == '' Or $(RuntimeIdentifier.StartsWith('iossimulator')) ">
+		<CodesignEntitlements>Platforms/iOS/Entitlements.Simulator.plist</CodesignEntitlements>
+		<CodesignRequireProvisioningProfile>false</CodesignRequireProvisioningProfile>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
@@ -52,7 +68,7 @@
 	<!--
 	  Resolved from ./artifacts through the local feed in the repository's NuGet.config, not from
 	  nuget.org, so the sample always exercises your local build. Run ./build/BuildNugets.sh first.
-	  Pass -p:SfmcPackageVersion=4.0.1.2-rc.1 to point it at a specific build.
+	  Pass -p:SfmcPackageVersion=5.0.0.1-rc.1 to point it at a specific build.
 
 	  net10 to match the sibling repositories' samples; the package itself targets net8, net9 and
 	  net10. Building this needs the .NET 10 SDK, which the repository's global.json does not

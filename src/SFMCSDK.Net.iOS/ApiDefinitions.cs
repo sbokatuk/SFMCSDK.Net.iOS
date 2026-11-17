@@ -1,8 +1,8 @@
 //
 // ApiDefinitions.cs
 //
-// Hand-maintained binding for SFMCSDK (sfmc-sdk-ios) 4.0.1.
-// Updated by diffing SFMCSDK-Swift.h between releases (1.1.3 -> 4.0.1).
+// Hand-maintained binding for SFMCSDK (sfmc-sdk-ios) 5.0.0.
+// Updated by diffing SFMCSDK-Swift.h between releases (1.1.3 -> 4.0.1 -> 5.0.0).
 // Do NOT regenerate with Objective Sharpie; edit by hand against the header diff.
 //
 
@@ -217,7 +217,11 @@ interface SFMCSdkEngagementEvent : SFMCSdkEvent
 }
 
 // @interface SFMCSdkCartEvent : SFMCSdkEngagementEvent
+// No initializer in the header, and SFMCSdkEngagementEvent's -init is SWIFT_UNAVAILABLE: the
+// inherited -init traps in swift_stdlib_reportUnimplementedInitializer. Build
+// SFMCSdkAddToCartEvent, SFMCSdkRemoveFromCartEvent or SFMCSdkReplaceCartEvent instead.
 [BaseType (typeof(SFMCSdkEngagementEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkCartEvent
 {
 	// @property (readonly, copy, nonatomic) NSArray<SFMCSdkLineItem *> * _Nonnull lineItems;
@@ -226,7 +230,10 @@ interface SFMCSdkCartEvent
 }
 
 // @interface SFMCSdkAddToCartEvent : SFMCSdkCartEvent
+// initWithLineItem: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCartEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkAddToCartEvent
 {
 	// -(instancetype _Nonnull)initWithLineItem:(SFMCSdkLineItem * _Nonnull)lineItem __attribute__((objc_designated_initializer));
@@ -243,32 +250,69 @@ interface SFMCSdkBehavior
 }
 
 // @interface SFMCSdkAppBackgrounded : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkAppBackgrounded
 {
 }
 
 // @interface SFMCSdkAppBecameActive : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkAppBecameActive
 {
 }
 
 // @interface SFMCSdkAppForegrounded : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkAppForegrounded
 {
 }
 
 // @interface SFMCSdkAppTerminated : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkAppTerminated
 {
 }
 
 // @interface SFMCSdkAppVersionChanged : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkAppVersionChanged
+{
+}
+
+// SWIFT_CLASS_NAMED("AppWillResignActive")
+// @interface SFMCSdkAppWillResignActive : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
+[BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
+interface SFMCSdkAppWillResignActive
 {
 }
 
@@ -314,6 +358,22 @@ interface SFMCSdkAuthenticator
 	[Abstract]
 	[Export ("deleteCachedToken")]
 	void DeleteCachedToken ();
+}
+
+// SWIFT_CLASS_NAMED("BadgeAggregator")
+// @interface SFMCSdkBadgeAggregator : NSObject
+[BaseType (typeof(NSObject))]
+[DisableDefaultCtor]
+interface SFMCSdkBadgeAggregator
+{
+	// @property (readonly, nonatomic, strong, class) SFMCSdkBadgeAggregator * _Nonnull shared;
+	[Static]
+	[Export ("shared", ArgumentSemantic.Strong)]
+	SFMCSdkBadgeAggregator Shared { get; }
+
+	// -(void)publishWithChannel:(enum SFMCSdkBadgeChannel)channel count:(NSInteger)count;
+	[Export ("publishWithChannel:count:")]
+	void Publish (SFMCSdkBadgeChannel channel, nint count);
 }
 
 // @interface SFMCSdkBehaviorManager : NSObject
@@ -398,7 +458,11 @@ interface SFMCSdkCDP : CdpInterface
 }
 
 // @interface SFMCSdkOrderEvent : SFMCSdkEngagementEvent
+// No initializer in the header, and SFMCSdkEngagementEvent's -init is SWIFT_UNAVAILABLE: the
+// inherited -init traps in swift_stdlib_reportUnimplementedInitializer. Build
+// one of the order events (SFMCSdkPurchaseOrderEvent and its siblings) instead.
 [BaseType (typeof(SFMCSdkEngagementEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkOrderEvent
 {
 	// @property (readonly, nonatomic, strong) SFMCSdkOrder * _Nonnull order;
@@ -407,7 +471,10 @@ interface SFMCSdkOrderEvent
 }
 
 // @interface SFMCSdkCancelOrderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkCancelOrderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -444,7 +511,11 @@ interface SFMCSdkCatalogObject
 }
 
 // @interface SFMCSdkCatalogObjectEvent : SFMCSdkEngagementEvent
+// No initializer in the header, and SFMCSdkEngagementEvent's -init is SWIFT_UNAVAILABLE: the
+// inherited -init traps in swift_stdlib_reportUnimplementedInitializer. Build
+// one of the catalog object events (SFMCSdkViewCatalogObjectEvent and its siblings) instead.
 [BaseType (typeof(SFMCSdkEngagementEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkCatalogObjectEvent
 {
 	// @property (readonly, nonatomic, strong) SFMCSdkCatalogObject * _Nonnull catalogObject;
@@ -453,7 +524,10 @@ interface SFMCSdkCatalogObjectEvent
 }
 
 // @interface SFMCSdkCommentCatalogObjectEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkCommentCatalogObjectEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
@@ -522,6 +596,10 @@ interface SFMCSdkConfigBuilder
 	// -(SFMCSdkConfigBuilder * _Nonnull)setInAppMessagingFeatureWithConfig:(id<SFMCSdkModuleConfig> _Nonnull)config __attribute__((warn_unused_result("")));
 	[Export ("setInAppMessagingFeatureWithConfig:")]
 	SFMCSdkConfigBuilder SetInAppMessagingFeature (ISFMCSdkModuleConfig config);
+
+	// -(SFMCSdkConfigBuilder * _Nonnull)setInboxFeatureWithConfig:(id<SFMCSdkModuleConfig> _Nonnull)config __attribute__((warn_unused_result("")));
+	[Export ("setInboxFeatureWithConfig:")]
+	SFMCSdkConfigBuilder SetInboxFeature (ISFMCSdkModuleConfig config);
 
 	// -(SFMCSdkConfig * _Nonnull)build __attribute__((warn_unused_result("")));
 	[Export ("build")]
@@ -597,7 +675,10 @@ interface SFMCSdkCustomEvent : SFMCSdkUserEvent
 }
 
 // @interface SFMCSdkDeliverOrderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkDeliverOrderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -709,7 +790,10 @@ interface SFMCSdkEventBus
 }
 
 // @interface SFMCSdkExchangeOrderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkExchangeOrderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -746,7 +830,10 @@ interface SFMCSdkFakeEvent : SFMCSdkEvent
 }
 
 // @interface SFMCSdkFavoriteCatalogObjectEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkFavoriteCatalogObjectEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
@@ -1121,6 +1208,18 @@ interface SFMCSdkInAppMessageButton
 [DisableDefaultCtor]
 interface SFMCSdkInAppMessageCloseAction
 {
+	// -(instancetype _Nonnull)initWithDismissReason:(enum SFMCSdkInAppMessageDismissReason)dismissReason id:(NSString * _Nullable)id __attribute__((objc_designated_initializer));
+	[Export ("initWithDismissReason:id:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor (SFMCSdkInAppMessageDismissReason dismissReason, [NullAllowed] string id);
+
+	// -(enum SFMCSdkInAppMessageDismissReason)getDismissReason __attribute__((warn_unused_result("")));
+	[Export ("getDismissReason")]
+	SFMCSdkInAppMessageDismissReason DismissReason { get; }
+
+	// -(NSString * _Nullable)getId __attribute__((warn_unused_result("")));
+	[NullAllowed, Export ("getId")]
+	string Id { get; }
 }
 
 interface ISFMCSdkInAppMessageCloseButton
@@ -1290,6 +1389,11 @@ interface SFMCSdkInAppMessageDetails
 	[Export ("messageDelaySec")]
 	nint MessageDelaySec { get; }
 
+	// @required @property (readonly, nonatomic) double minTimeBetweenDisplay;
+	[Abstract]
+	[Export ("minTimeBetweenDisplay")]
+	double MinTimeBetweenDisplay { get; }
+
 	// @required @property (readonly, nonatomic) NSInteger priority;
 	[Abstract]
 	[Export ("priority")]
@@ -1299,6 +1403,11 @@ interface SFMCSdkInAppMessageDetails
 	[Abstract]
 	[NullAllowed, Export ("displaySuppressionAction", ArgumentSemantic.Copy)]
 	string[] DisplaySuppressionAction { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSDictionary<NSString *,id> * _Nullable customKeys;
+	[Abstract]
+	[NullAllowed, Export ("customKeys", ArgumentSemantic.Copy)]
+	NSDictionary<NSString, NSObject> CustomKeys { get; }
 }
 
 interface ISFMCSdkInAppMessageEventDelegate
@@ -1824,6 +1933,14 @@ interface SFMCSdkPrivacyStatusChangeEvent : SFMCSdkEvent
 	[Export ("name")]
 	string Name { get; }
 
+	// @property (nonatomic) BOOL isBlocked;
+	[Export ("isBlocked")]
+	bool IsBlocked { get; set; }
+
+	// @property (nonatomic) BOOL shouldDeleteData;
+	[Export ("shouldDeleteData")]
+	bool ShouldDeleteData { get; set; }
+
 	// @property (readonly, nonatomic) enum SFMCSdkEventCategory category;
 	[Export ("category")]
 	SFMCSdkEventCategory Category { get; }
@@ -1844,10 +1961,603 @@ interface SFMCSdkPrivacyStatusChangeEvent : SFMCSdkEvent
 [DisableDefaultCtor]
 interface SFMCSdkInAppPrivacyStatusChangeEvent
 {
+	// @property (readonly, nonatomic) enum SFMCSdkModuleName source;
+	[Export ("source")]
+	SFMCSdkModuleName Source { get; }
+
 	// -(instancetype _Nonnull)initWithName:(NSString * _Nonnull)name source:(enum SFMCSdkModuleName)source isBlocked:(BOOL)isBlocked shouldDeleteData:(BOOL)shouldDeleteData attributes:(NSDictionary<NSString *,id> * _Nullable)attributes __attribute__((objc_designated_initializer));
 	[Export ("initWithName:source:isBlocked:shouldDeleteData:attributes:")]
 	[DesignatedInitializer]
 	NativeHandle Constructor (string name, SFMCSdkModuleName source, bool isBlocked, bool shouldDeleteData, [NullAllowed] NSDictionary<NSString, NSObject> attributes);
+}
+
+interface ISFMCSdkInboxAction
+{
+}
+
+// SWIFT_PROTOCOL_NAMED("InboxAction")
+// @protocol SFMCSdkInboxAction
+[Protocol, Model, BaseType (typeof(NSObject))]
+interface SFMCSdkInboxAction
+{
+	// @required @property (readonly, copy, nonatomic) NSString * _Nonnull type;
+	[Abstract]
+	[Export ("type")]
+	string Type { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSString * _Nullable value;
+	[Abstract]
+	[NullAllowed, Export ("value")]
+	string Value { get; }
+}
+
+// SWIFT_CLASS_NAMED("InboxActionType")
+// @interface SFMCSdkInboxActionType : NSObject
+[BaseType (typeof(NSObject))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxActionType
+{
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull none;
+	[Static]
+	[Export ("none")]
+	string None { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull webUrl;
+	[Static]
+	[Export ("webUrl")]
+	string WebUrl { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull appUrl;
+	[Static]
+	[Export ("appUrl")]
+	string AppUrl { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull landingPage;
+	[Static]
+	[Export ("landingPage")]
+	string LandingPage { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull clipboard;
+	[Static]
+	[Export ("clipboard")]
+	string Clipboard { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull other;
+	[Static]
+	[Export ("other")]
+	string Other { get; }
+}
+
+// SWIFT_CLASS_NAMED("InboxEvent")
+// @interface SFMCSdkInboxEvent : NSObject <SFMCSdkEvent>
+[BaseType (typeof(NSObject))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxEvent : SFMCSdkEvent
+{
+	// @property (readonly, copy, nonatomic) NSString * _Nonnull id;
+	[Export ("id")]
+	string Id { get; }
+
+	// @property (readonly, nonatomic) enum SFMCSdkEventCategory category;
+	[Export ("category")]
+	SFMCSdkEventCategory Category { get; }
+
+	// @property (readonly, copy, nonatomic) NSDictionary<NSString *,id> * _Nullable attributes;
+	[NullAllowed, Export ("attributes", ArgumentSemantic.Copy)]
+	NSDictionary<NSString, NSObject> Attributes { get; }
+
+	// @property (readonly, copy, nonatomic) NSString * _Nonnull name;
+	[Export ("name")]
+	string Name { get; }
+}
+
+// SWIFT_CLASS_NAMED("InboxAnalyticsEvent")
+// @interface SFMCSdkInboxAnalyticsEvent : SFMCSdkInboxEvent
+[BaseType (typeof(SFMCSdkInboxEvent))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxAnalyticsEvent
+{
+	// @property (readonly, copy, nonatomic) NSString * _Nonnull messageId;
+	[Export ("messageId")]
+	string MessageId { get; }
+
+	// @property (readonly, copy, nonatomic) NSString * _Nullable requestId;
+	[NullAllowed, Export ("requestId")]
+	string RequestId { get; }
+
+	// @property (readonly, nonatomic) enum SFMCInboxAnalyticsType analyticsType;
+	[Export ("analyticsType")]
+	SFMCInboxAnalyticsType AnalyticsType { get; }
+
+	// -(instancetype _Nonnull)initWithMessageId:(NSString * _Nonnull)messageId requestId:(NSString * _Nullable)requestId analyticsType:(enum SFMCInboxAnalyticsType)analyticsType __attribute__((objc_designated_initializer));
+	[Export ("initWithMessageId:requestId:analyticsType:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor (string messageId, [NullAllowed] string requestId, SFMCInboxAnalyticsType analyticsType);
+}
+
+// SWIFT_CLASS_NAMED("InboxAudienceType")
+// @interface SFMCSdkInboxAudienceType : NSObject
+[BaseType (typeof(NSObject))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxAudienceType
+{
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull device;
+	[Static]
+	[Export ("device")]
+	string Device { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull user;
+	[Static]
+	[Export ("user")]
+	string User { get; }
+}
+
+interface ISFMCSdkInboxButton
+{
+}
+
+// SWIFT_PROTOCOL_NAMED("InboxButton")
+// @protocol SFMCSdkInboxButton
+[Protocol, Model, BaseType (typeof(NSObject))]
+interface SFMCSdkInboxButton
+{
+	// @required @property (readonly, copy, nonatomic) NSString * _Nonnull id;
+	[Abstract]
+	[Export ("id")]
+	string Id { get; }
+
+	// @required @property (readonly, nonatomic) NSInteger index;
+	[Abstract]
+	[Export ("index")]
+	nint Index { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSString * _Nonnull text;
+	[Abstract]
+	[Export ("text")]
+	string Text { get; }
+
+	// @required @property (readonly, nonatomic, strong) id<SFMCSdkInboxAction> _Nonnull action;
+	[Abstract]
+	[Export ("action", ArgumentSemantic.Strong)]
+	ISFMCSdkInboxAction Action { get; }
+}
+
+// SWIFT_CLASS_NAMED("InboxDataEvent")
+// @interface SFMCSdkInboxDataEvent : SFMCSdkInboxEvent
+[BaseType (typeof(SFMCSdkInboxEvent))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxDataEvent
+{
+	// @property (readonly, copy, nonatomic) NSArray<NSDictionary<NSString *,id> *> * _Nullable messages;
+	[NullAllowed, Export ("messages", ArgumentSemantic.Copy)]
+	NSDictionary<NSString, NSObject>[] Messages { get; }
+
+	// @property (readonly, copy, nonatomic) NSString * _Nullable watermark;
+	[NullAllowed, Export ("watermark")]
+	string Watermark { get; }
+
+	// @property (readonly, copy, nonatomic) NSString * _Nullable userId;
+	[NullAllowed, Export ("userId")]
+	string UserId { get; }
+
+	// @property (readonly, nonatomic) enum SFMCSdkModuleName source;
+	[Export ("source")]
+	SFMCSdkModuleName Source { get; }
+
+	// -(instancetype _Nonnull)initWithMessages:(NSArray<NSDictionary<NSString *,id> *> * _Nullable)messages watermark:(NSString * _Nullable)watermark userId:(NSString * _Nullable)userId source:(enum SFMCSdkModuleName)source __attribute__((objc_designated_initializer));
+	[Export ("initWithMessages:watermark:userId:source:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor ([NullAllowed] NSDictionary<NSString, NSObject>[] messages, [NullAllowed] string watermark, [NullAllowed] string userId, SFMCSdkModuleName source);
+}
+
+// SWIFT_CLASS_NAMED("InboxDataFailedEvent")
+// @interface SFMCSdkInboxDataFailedEvent : SFMCSdkInboxEvent
+[BaseType (typeof(SFMCSdkInboxEvent))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxDataFailedEvent
+{
+	// @property (readonly, nonatomic) enum SFMCSdkInboxDataFailedReason reason;
+	[Export ("reason")]
+	SFMCSdkInboxDataFailedReason Reason { get; }
+
+	// @property (readonly, nonatomic) enum SFMCSdkModuleName source;
+	[Export ("source")]
+	SFMCSdkModuleName Source { get; }
+
+	// -(instancetype _Nonnull)initWithReason:(enum SFMCSdkInboxDataFailedReason)reason source:(enum SFMCSdkModuleName)source __attribute__((objc_designated_initializer));
+	[Export ("initWithReason:source:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor (SFMCSdkInboxDataFailedReason reason, SFMCSdkModuleName source);
+}
+
+// SWIFT_CLASS_NAMED("InboxDataProcessedEvent")
+// @interface SFMCSdkInboxDataProcessedEvent : SFMCSdkInboxEvent
+[BaseType (typeof(SFMCSdkInboxEvent))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxDataProcessedEvent
+{
+	// @property (readonly, copy, nonatomic) NSString * _Nullable watermark;
+	[NullAllowed, Export ("watermark")]
+	string Watermark { get; }
+
+	// @property (readonly, copy, nonatomic) NSString * _Nullable userId;
+	[NullAllowed, Export ("userId")]
+	string UserId { get; }
+
+	// @property (readonly, nonatomic) enum SFMCSdkModuleName source;
+	[Export ("source")]
+	SFMCSdkModuleName Source { get; }
+
+	// -(instancetype _Nonnull)initWithWatermark:(NSString * _Nullable)watermark userId:(NSString * _Nullable)userId source:(enum SFMCSdkModuleName)source __attribute__((objc_designated_initializer));
+	[Export ("initWithWatermark:userId:source:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor ([NullAllowed] string watermark, [NullAllowed] string userId, SFMCSdkModuleName source);
+}
+
+// SWIFT_CLASS_NAMED("InboxDataRequestEvent")
+// @interface SFMCSdkInboxDataRequestEvent : SFMCSdkInboxEvent
+[BaseType (typeof(SFMCSdkInboxEvent))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxDataRequestEvent
+{
+	// @property (readonly, nonatomic) enum SFMCSdkInboxDataRequestTrigger trigger;
+	[Export ("trigger")]
+	SFMCSdkInboxDataRequestTrigger Trigger { get; }
+
+	// -(instancetype _Nonnull)initWithTrigger:(enum SFMCSdkInboxDataRequestTrigger)trigger __attribute__((objc_designated_initializer));
+	[Export ("initWithTrigger:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor (SFMCSdkInboxDataRequestTrigger trigger);
+}
+
+interface IInboxFeatureProtocol
+{
+}
+
+// SWIFT_PROTOCOL("_TtP7SFMCSDK20InboxFeatureProtocol_")
+[Model, Protocol (Name = "_TtP7SFMCSDK20InboxFeatureProtocol_"), BaseType (typeof(NSObject))]
+interface InboxFeatureProtocol
+{
+	// @required -(id<SFMCSdkModuleIdentity> _Nullable)getIdentity __attribute__((warn_unused_result("")));
+	[Abstract]
+	[NullAllowed, Export ("getIdentity")]
+	ISFMCSdkModuleIdentity Identity { get; }
+
+	// @required -(void)internalTearDown;
+	[Abstract]
+	[Export ("internalTearDown")]
+	void InternalTearDown ();
+}
+
+// SWIFT_CLASS_NAMED("InboxInteractionAnalyticsEvent")
+// @interface SFMCSdkInboxInteractionAnalyticsEvent : SFMCSdkInboxAnalyticsEvent
+[BaseType (typeof(SFMCSdkInboxAnalyticsEvent))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxInteractionAnalyticsEvent
+{
+	// @property (readonly, copy, nonatomic) NSString * _Nonnull clickedObjectType;
+	[Export ("clickedObjectType")]
+	string ClickedObjectType { get; }
+
+	// @property (readonly, copy, nonatomic) NSString * _Nullable clickedObjectId;
+	[NullAllowed, Export ("clickedObjectId")]
+	string ClickedObjectId { get; }
+
+	// @property (readonly, copy, nonatomic) NSString * _Nullable clickedObjectText;
+	[NullAllowed, Export ("clickedObjectText")]
+	string ClickedObjectText { get; }
+
+	// -(instancetype _Nonnull)initWithMessageId:(NSString * _Nonnull)messageId requestId:(NSString * _Nullable)requestId clickedObjectType:(NSString * _Nonnull)clickedObjectType clickedObjectId:(NSString * _Nullable)clickedObjectId clickedObjectText:(NSString * _Nullable)clickedObjectText __attribute__((objc_designated_initializer));
+	[Export ("initWithMessageId:requestId:clickedObjectType:clickedObjectId:clickedObjectText:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor (string messageId, [NullAllowed] string requestId, string clickedObjectType, [NullAllowed] string clickedObjectId, [NullAllowed] string clickedObjectText);
+}
+
+interface ISFMCSdkInboxMedia
+{
+}
+
+// SWIFT_PROTOCOL_NAMED("InboxMedia")
+// @protocol SFMCSdkInboxMedia
+[Protocol, Model, BaseType (typeof(NSObject))]
+interface SFMCSdkInboxMedia
+{
+	// @required @property (readonly, copy, nonatomic) NSString * _Nonnull url;
+	[Abstract]
+	[Export ("url")]
+	string Url { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSString * _Nullable altText;
+	[Abstract]
+	[NullAllowed, Export ("altText")]
+	string AltText { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSString * _Nullable type;
+	[Abstract]
+	[NullAllowed, Export ("type")]
+	string Type { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSString * _Nullable mimeType;
+	[Abstract]
+	[NullAllowed, Export ("mimeType")]
+	string MimeType { get; }
+}
+
+// SWIFT_CLASS_NAMED("InboxMediaType")
+// @interface SFMCSdkInboxMediaType : NSObject
+[BaseType (typeof(NSObject))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxMediaType
+{
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull image;
+	[Static]
+	[Export ("image")]
+	string Image { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull gif;
+	[Static]
+	[Export ("gif")]
+	string Gif { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull video;
+	[Static]
+	[Export ("video")]
+	string Video { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull audio;
+	[Static]
+	[Export ("audio")]
+	string Audio { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull other;
+	[Static]
+	[Export ("other")]
+	string Other { get; }
+}
+
+interface ISFMCSdkInboxMessage
+{
+}
+
+// SWIFT_PROTOCOL_NAMED("InboxMessage")
+// @protocol SFMCSdkInboxMessage
+[Protocol, Model, BaseType (typeof(NSObject))]
+interface SFMCSdkInboxMessage
+{
+	// @required @property (readonly, copy, nonatomic) NSString * _Nonnull messageId;
+	[Abstract]
+	[Export ("messageId")]
+	string MessageId { get; }
+
+	// @required @property (readonly, nonatomic) enum SFMCSdkInboxMessageType messageType;
+	[Abstract]
+	[Export ("messageType")]
+	SFMCSdkInboxMessageType MessageType { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSString * _Nullable source;
+	[Abstract]
+	[NullAllowed, Export ("source")]
+	string Source { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSString * _Nonnull audienceType;
+	[Abstract]
+	[Export ("audienceType")]
+	string AudienceType { get; }
+
+	// @required @property (readonly, nonatomic, strong) id<SFMCSdkInboxText> _Nullable subject;
+	[Abstract]
+	[NullAllowed, Export ("subject", ArgumentSemantic.Strong)]
+	ISFMCSdkInboxText Subject { get; }
+
+	// @required @property (readonly, nonatomic, strong) id<SFMCSdkInboxText> _Nullable subtitle;
+	[Abstract]
+	[NullAllowed, Export ("subtitle", ArgumentSemantic.Strong)]
+	ISFMCSdkInboxText Subtitle { get; }
+
+	// @required @property (readonly, nonatomic, strong) id<SFMCSdkInboxText> _Nullable message;
+	[Abstract]
+	[NullAllowed, Export ("message", ArgumentSemantic.Strong)]
+	ISFMCSdkInboxText Message { get; }
+
+	// @required @property (readonly, nonatomic, strong) id<SFMCSdkInboxAction> _Nonnull action;
+	[Abstract]
+	[Export ("action", ArgumentSemantic.Strong)]
+	ISFMCSdkInboxAction Action { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSString * _Nullable custom;
+	[Abstract]
+	[NullAllowed, Export ("custom")]
+	string Custom { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSDictionary<NSString *,id> * _Nullable customKeys;
+	[Abstract]
+	[NullAllowed, Export ("customKeys", ArgumentSemantic.Copy)]
+	NSDictionary<NSString, NSObject> CustomKeys { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSString * _Nullable sound;
+	[Abstract]
+	[NullAllowed, Export ("sound")]
+	string Sound { get; }
+
+	// @required @property (readonly, nonatomic, strong) id<SFMCSdkInboxMedia> _Nullable media;
+	[Abstract]
+	[NullAllowed, Export ("media", ArgumentSemantic.Strong)]
+	ISFMCSdkInboxMedia Media { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSArray<id<SFMCSdkInboxButton>> * _Nullable buttons;
+	[Abstract]
+	[NullAllowed, Export ("buttons", ArgumentSemantic.Copy)]
+	ISFMCSdkInboxButton[] Buttons { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSDictionary<NSString *,id> * _Nullable notificationMessage;
+	[Abstract]
+	[NullAllowed, Export ("notificationMessage", ArgumentSemantic.Copy)]
+	NSDictionary<NSString, NSObject> NotificationMessage { get; }
+
+	// @required @property (readonly, nonatomic) BOOL read;
+	[Abstract]
+	[Export ("read")]
+	bool Read { get; }
+
+	// @required @property (readonly, nonatomic) BOOL deleted;
+	[Abstract]
+	[Export ("deleted")]
+	bool Deleted { get; }
+
+	// @required @property (readonly, nonatomic) BOOL countInBadge;
+	[Abstract]
+	[Export ("countInBadge")]
+	bool CountInBadge { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSDate * _Nullable startDate;
+	[Abstract]
+	[NullAllowed, Export ("startDate", ArgumentSemantic.Copy)]
+	NSDate StartDate { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSDate * _Nullable endDate;
+	[Abstract]
+	[NullAllowed, Export ("endDate", ArgumentSemantic.Copy)]
+	NSDate EndDate { get; }
+
+	// @required @property (readonly, copy, nonatomic) NSDate * _Nullable sendDate;
+	[Abstract]
+	[NullAllowed, Export ("sendDate", ArgumentSemantic.Copy)]
+	NSDate SendDate { get; }
+}
+
+// SWIFT_CLASS_NAMED("InboxMessageInteraction")
+// @interface SFMCSdkInboxMessageInteraction : NSObject
+[BaseType (typeof(NSObject))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxMessageInteraction
+{
+	// @property (readonly, nonatomic) enum SFMCSdkInboxInteractionType type;
+	[Export ("type")]
+	SFMCSdkInboxInteractionType Type { get; }
+
+	// @property (readonly, copy, nonatomic) NSString * _Nullable id;
+	[NullAllowed, Export ("id")]
+	string Id { get; }
+
+	// -(instancetype _Nonnull)initWithType:(enum SFMCSdkInboxInteractionType)type id:(NSString * _Nullable)id __attribute__((objc_designated_initializer));
+	[Export ("initWithType:id:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor (SFMCSdkInboxInteractionType type, [NullAllowed] string id);
+}
+
+// SWIFT_CLASS_NAMED("InboxMigrationCompleted")
+// @interface SFMCSdkInboxMigrationCompleted : SFMCSdkInboxEvent
+[BaseType (typeof(SFMCSdkInboxEvent))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxMigrationCompleted
+{
+	// @property (readonly, nonatomic) enum SFMCSdkModuleName source;
+	[Export ("source")]
+	SFMCSdkModuleName Source { get; }
+
+	// -(instancetype _Nonnull)initWithSource:(enum SFMCSdkModuleName)source __attribute__((objc_designated_initializer));
+	[Export ("initWithSource:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor (SFMCSdkModuleName source);
+}
+
+// SWIFT_CLASS_NAMED("InboxMigrationDataEvent")
+// @interface SFMCSdkInboxMigrationDataEvent : SFMCSdkInboxEvent
+[BaseType (typeof(SFMCSdkInboxEvent))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxMigrationDataEvent
+{
+	// @property (readonly, copy, nonatomic) NSArray<NSDictionary<NSString *,id> *> * _Nullable messages;
+	[NullAllowed, Export ("messages", ArgumentSemantic.Copy)]
+	NSDictionary<NSString, NSObject>[] Messages { get; }
+
+	// @property (readonly, nonatomic) enum SFMCSdkModuleName source;
+	[Export ("source")]
+	SFMCSdkModuleName Source { get; }
+
+	// -(instancetype _Nonnull)initWithMessages:(NSArray<NSDictionary<NSString *,id> *> * _Nullable)messages source:(enum SFMCSdkModuleName)source __attribute__((objc_designated_initializer));
+	[Export ("initWithMessages:source:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor ([NullAllowed] NSDictionary<NSString, NSObject>[] messages, SFMCSdkModuleName source);
+}
+
+// SWIFT_CLASS_NAMED("InboxPrivacyStatusChangeEvent")
+// @interface SFMCSdkInboxPrivacyStatusChangeEvent : SFMCSdkPrivacyStatusChangeEvent
+[BaseType (typeof(SFMCSdkPrivacyStatusChangeEvent))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxPrivacyStatusChangeEvent
+{
+	// @property (readonly, nonatomic) enum SFMCSdkModuleName source;
+	[Export ("source")]
+	SFMCSdkModuleName Source { get; }
+
+	// -(instancetype _Nonnull)initWithName:(NSString * _Nonnull)name source:(enum SFMCSdkModuleName)source isBlocked:(BOOL)isBlocked shouldDeleteData:(BOOL)shouldDeleteData attributes:(NSDictionary<NSString *,id> * _Nullable)attributes __attribute__((objc_designated_initializer));
+	[Export ("initWithName:source:isBlocked:shouldDeleteData:attributes:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor (string name, SFMCSdkModuleName source, bool isBlocked, bool shouldDeleteData, [NullAllowed] NSDictionary<NSString, NSObject> attributes);
+}
+
+// SWIFT_CLASS_NAMED("InboxStatusUpdateEvent")
+// @interface SFMCSdkInboxStatusUpdateEvent : SFMCSdkInboxEvent
+[BaseType (typeof(SFMCSdkInboxEvent))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxStatusUpdateEvent
+{
+	// @property (readonly, copy, nonatomic) NSArray<NSDictionary<NSString *,id> *> * _Nonnull statusUpdates;
+	[Export ("statusUpdates", ArgumentSemantic.Copy)]
+	NSDictionary<NSString, NSObject>[] StatusUpdates { get; }
+
+	// @property (readonly, nonatomic) enum SFMCSdkModuleName source;
+	[Export ("source")]
+	SFMCSdkModuleName Source { get; }
+
+	// -(instancetype _Nonnull)initWithStatusUpdates:(NSArray<NSDictionary<NSString *,id> *> * _Nonnull)statusUpdates source:(enum SFMCSdkModuleName)source __attribute__((objc_designated_initializer));
+	[Export ("initWithStatusUpdates:source:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor (NSDictionary<NSString, NSObject>[] statusUpdates, SFMCSdkModuleName source);
+}
+
+// SWIFT_CLASS_NAMED("InboxStatusUpdateRequestEvent")
+// @interface SFMCSdkInboxStatusUpdateRequestEvent : SFMCSdkInboxEvent
+// -(instancetype _Nonnull)init __attribute__((objc_designated_initializer)); is the default constructor.
+[BaseType (typeof(SFMCSdkInboxEvent))]
+interface SFMCSdkInboxStatusUpdateRequestEvent
+{
+}
+
+// SWIFT_CLASS_NAMED("InboxStatusUpdateSuccessEvent")
+// @interface SFMCSdkInboxStatusUpdateSuccessEvent : SFMCSdkInboxEvent
+[BaseType (typeof(SFMCSdkInboxEvent))]
+[DisableDefaultCtor]
+interface SFMCSdkInboxStatusUpdateSuccessEvent
+{
+	// @property (readonly, copy, nonatomic) NSDictionary<NSString *,NSString *> * _Nonnull messageActions;
+	[Export ("messageActions", ArgumentSemantic.Copy)]
+	NSDictionary<NSString, NSString> MessageActions { get; }
+
+	// @property (readonly, nonatomic) enum SFMCSdkModuleName source;
+	[Export ("source")]
+	SFMCSdkModuleName Source { get; }
+
+	// -(instancetype _Nonnull)initWithMessageActions:(NSDictionary<NSString *,NSString *> * _Nonnull)messageActions source:(enum SFMCSdkModuleName)source __attribute__((objc_designated_initializer));
+	[Export ("initWithMessageActions:source:")]
+	[DesignatedInitializer]
+	NativeHandle Constructor (NSDictionary<NSString, NSString> messageActions, SFMCSdkModuleName source);
+}
+
+interface ISFMCSdkInboxText
+{
+}
+
+// SWIFT_PROTOCOL_NAMED("InboxText")
+// @protocol SFMCSdkInboxText
+[Protocol, Model, BaseType (typeof(NSObject))]
+interface SFMCSdkInboxText
+{
+	// @required @property (readonly, copy, nonatomic) NSString * _Nonnull text;
+	[Abstract]
+	[Export ("text")]
+	string Text { get; }
 }
 
 // @interface SFMCSdkLineItem : NSObject
@@ -2146,7 +2856,10 @@ interface SFMCSdkPersonalization
 }
 
 // @interface SFMCSdkPreorderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkPreorderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -2156,7 +2869,10 @@ interface SFMCSdkPreorderEvent
 }
 
 // @interface SFMCSdkPurchaseOrderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkPurchaseOrderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -2309,7 +3025,10 @@ interface SFMCSdkPushURLHandlingEvent
 }
 
 // @interface SFMCSdkQuickViewCatalogObjectEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkQuickViewCatalogObjectEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
@@ -2335,7 +3054,10 @@ interface SFMCSdkQuietPushEnabledEvent
 }
 
 // @interface SFMCSdkRemoveFromCartEvent : SFMCSdkCartEvent
+// initWithLineItem: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCartEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkRemoveFromCartEvent
 {
 	// -(instancetype _Nonnull)initWithLineItem:(SFMCSdkLineItem * _Nonnull)lineItem __attribute__((objc_designated_initializer));
@@ -2345,7 +3067,10 @@ interface SFMCSdkRemoveFromCartEvent
 }
 
 // @interface SFMCSdkReplaceCartEvent : SFMCSdkCartEvent
+// initWithLineItems: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCartEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkReplaceCartEvent
 {
 	// -(instancetype _Nonnull)initWithLineItems:(NSArray<SFMCSdkLineItem *> * _Nonnull)lineItems __attribute__((objc_designated_initializer));
@@ -2355,7 +3080,10 @@ interface SFMCSdkReplaceCartEvent
 }
 
 // @interface SFMCSdkReturnOrderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkReturnOrderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -2365,7 +3093,10 @@ interface SFMCSdkReturnOrderEvent
 }
 
 // @interface SFMCSdkReviewCatalogObjectEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkReviewCatalogObjectEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
@@ -2541,6 +3272,11 @@ interface SFMCSdk
 	[Export ("requestCdpSdk:")]
 	void RequestCdpSdk (Action<ICdpInterface> callback);
 
+	// +(enum SFMCSdkModuleStatus)getStatusWithModule:(enum SFMCSdkModuleName)module_ __attribute__((warn_unused_result("")));
+	[Static]
+	[Export ("getStatusWithModule:")]
+	SFMCSdkModuleStatus GetStatus (SFMCSdkModuleName module_);
+
 	// +(void)trackWithEvent:(id<SFMCSdkEvent> _Nonnull)event;
 	[Static]
 	[Export ("trackWithEvent:")]
@@ -2555,6 +3291,11 @@ interface SFMCSdk
 	[Static]
 	[Export ("flush")]
 	void Flush ();
+
+	// +(void)setHostRuntimeWithName:(enum SFMCWrapperName)name version:(NSString * _Nonnull)version;
+	[Static]
+	[Export ("setHostRuntimeWithName:version:")]
+	void SetHostRuntime (SFMCWrapperName name, string version);
 }
 
 // @interface SFMCSdkComponents : NSObject
@@ -2618,7 +3359,12 @@ interface SFMCSdkLogger : Logger
 }
 
 // @interface SFMCSdkScreenEntry : SFMCSdkBehavior
+// No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
+[DisableDefaultCtor]
 interface SFMCSdkScreenEntry
 {
 }
@@ -2688,7 +3434,10 @@ interface SFMCSdkSessionManager : SessionManagerProtocol
 }
 
 // @interface SFMCSdkShareCatalogObjectEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkShareCatalogObjectEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
@@ -2698,7 +3447,10 @@ interface SFMCSdkShareCatalogObjectEvent
 }
 
 // @interface SFMCSdkShipOrderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkShipOrderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -2852,8 +3604,38 @@ interface SFMCSdkURLHandlingDelegate
 	void HandleURL (NSUrl url, string type);
 }
 
+// SWIFT_CLASS_NAMED("URLType")
+// @interface SFMCSdkURLType : NSObject
+[BaseType (typeof(NSObject))]
+[DisableDefaultCtor]
+interface SFMCSdkURLType
+{
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull cloudPage;
+	[Static]
+	[Export ("cloudPage")]
+	string CloudPage { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull openDirect;
+	[Static]
+	[Export ("openDirect")]
+	string OpenDirect { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull action;
+	[Static]
+	[Export ("action")]
+	string Action { get; }
+
+	// @property (readonly, copy, nonatomic, class) NSString * _Nonnull other;
+	[Static]
+	[Export ("other")]
+	string Other { get; }
+}
+
 // @interface SFMCSdkViewCatalogObjectDetailEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkViewCatalogObjectDetailEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
@@ -2863,7 +3645,10 @@ interface SFMCSdkViewCatalogObjectDetailEvent
 }
 
 // @interface SFMCSdkViewCatalogObjectEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkViewCatalogObjectEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
