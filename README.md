@@ -60,7 +60,7 @@ The whole Objective-C projection of the framework — 188 interfaces, 37 enums �
 
 What changed at v4, for consumers of the old 1.x packages: the identity class is `SFIdentity` (edits through `Identity.Edit(modifier => …)`), `SFMCSdkPUSH`/`PushInterface` are gone (push is the sibling package's `MarketingCloudSdk`), the config builder grew per-module setters (`SetPushFeature`, `SetEngagement`, `SetPersonalization`, `SetMAM`, `SetInAppMessagingFeature`, `SetCdp`), `InitializeSdk` gained a per-module completion block, and large In-App-Messaging, Personalization and push-feature event surfaces are new.
 
-What changed at v5: the Inbox feature arrived — `SFMCSdkConfigBuilder.SetInboxFeature`, the `ISFMCSdkInboxMessage` family of protocols, the `SFMCSdkInbox…Event` classes and `SFMCSdkModuleName.InboxFeature` — along with `SFMCSdk.GetStatus (module)`, `SFMCSdkBadgeAggregator` and `SFMCSdkURLType`. Nothing was removed. One raw value moved: `SFMCSdkEventCategory.FlushEvents` is 7, not 6. The [5.0.0.1 release note](https://github.com/sbokatuk/SFMCSDK.Net.iOS/blob/main/docs/release-notes/5.0.0.1.md) has the full list.
+What changed at v5: the Inbox feature arrived — `SFMCSdkConfigBuilder.SetInboxFeature`, the `ISFMCSdkInboxMessage` family of protocols, the `SFMCSdkInbox…Event` classes and `SFMCSdkModuleName.InboxFeature` — along with `SFMCSdk.GetStatus (module)`, `SFMCSdkBadgeAggregator` and `SFMCSdkURLType`. One raw value moved: `SFMCSdkEventCategory.FlushEvents` is 7, not 6. The only members removed are 26 parameterless constructors that could not be called without aborting the process — the behaviours (`SFMCSdkAppBackgrounded` and its siblings, `SFMCSdkScreenEntry`), which only the SDK creates, and the cart, order and catalog object events, which are built through the constructor the native class declares, such as `new SFMCSdkAddToCartEvent (lineItem)`. The [5.0.0.1 release note](https://github.com/sbokatuk/SFMCSDK.Net.iOS/blob/main/docs/release-notes/5.0.0.1.md) has the full list.
 
 ## Installing
 
@@ -104,7 +104,7 @@ dotnet test tests/SFMCSDK.Net.iOS.PackageTests
 ./.github/scripts/run-simulator-tests.sh 5.0.0.1 net9.0-ios18.0
 ```
 
-The simulator tests run without credentials on purpose: the native SDK loads, reports its version, initializes standalone, and answers state, module-status and identity reads; the objects new in 5.0.0 are built and read back.
+The simulator tests run without credentials on purpose: the native SDK loads, reports its version, initializes standalone, and answers state, module-status and identity reads; the objects new in 5.0.0 and the cart, order and catalog object events are built and read back.
 
 One measured upstream behaviour they encode: with zero modules configured, `initializeSdk`'s completion block fires once per call, a few milliseconds after the call returns, on a background thread, with an empty array — it reports per-module statuses, and there are none. That is the same on 4.0.1 and 5.0.0. Earlier versions of this README said the block never fires; that was a simulator app without keychain access (see [Troubleshooting](#troubleshooting)), observed on the net8 and net9 legs and mistaken for SDK behaviour. The first check the tests run now is that the keychain is usable.
 
