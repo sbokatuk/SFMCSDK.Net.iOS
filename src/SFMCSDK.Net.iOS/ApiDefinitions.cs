@@ -217,7 +217,11 @@ interface SFMCSdkEngagementEvent : SFMCSdkEvent
 }
 
 // @interface SFMCSdkCartEvent : SFMCSdkEngagementEvent
+// No initializer in the header, and SFMCSdkEngagementEvent's -init is SWIFT_UNAVAILABLE: the
+// inherited -init traps in swift_stdlib_reportUnimplementedInitializer. Build
+// SFMCSdkAddToCartEvent, SFMCSdkRemoveFromCartEvent or SFMCSdkReplaceCartEvent instead.
 [BaseType (typeof(SFMCSdkEngagementEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkCartEvent
 {
 	// @property (readonly, copy, nonatomic) NSArray<SFMCSdkLineItem *> * _Nonnull lineItems;
@@ -226,7 +230,10 @@ interface SFMCSdkCartEvent
 }
 
 // @interface SFMCSdkAddToCartEvent : SFMCSdkCartEvent
+// initWithLineItem: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCartEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkAddToCartEvent
 {
 	// -(instancetype _Nonnull)initWithLineItem:(SFMCSdkLineItem * _Nonnull)lineItem __attribute__((objc_designated_initializer));
@@ -439,7 +446,11 @@ interface SFMCSdkCDP : CdpInterface
 }
 
 // @interface SFMCSdkOrderEvent : SFMCSdkEngagementEvent
+// No initializer in the header, and SFMCSdkEngagementEvent's -init is SWIFT_UNAVAILABLE: the
+// inherited -init traps in swift_stdlib_reportUnimplementedInitializer. Build
+// one of the order events (SFMCSdkPurchaseOrderEvent and its siblings) instead.
 [BaseType (typeof(SFMCSdkEngagementEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkOrderEvent
 {
 	// @property (readonly, nonatomic, strong) SFMCSdkOrder * _Nonnull order;
@@ -448,7 +459,10 @@ interface SFMCSdkOrderEvent
 }
 
 // @interface SFMCSdkCancelOrderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkCancelOrderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -485,7 +499,11 @@ interface SFMCSdkCatalogObject
 }
 
 // @interface SFMCSdkCatalogObjectEvent : SFMCSdkEngagementEvent
+// No initializer in the header, and SFMCSdkEngagementEvent's -init is SWIFT_UNAVAILABLE: the
+// inherited -init traps in swift_stdlib_reportUnimplementedInitializer. Build
+// one of the catalog object events (SFMCSdkViewCatalogObjectEvent and its siblings) instead.
 [BaseType (typeof(SFMCSdkEngagementEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkCatalogObjectEvent
 {
 	// @property (readonly, nonatomic, strong) SFMCSdkCatalogObject * _Nonnull catalogObject;
@@ -494,7 +512,10 @@ interface SFMCSdkCatalogObjectEvent
 }
 
 // @interface SFMCSdkCommentCatalogObjectEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkCommentCatalogObjectEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
@@ -642,7 +663,10 @@ interface SFMCSdkCustomEvent : SFMCSdkUserEvent
 }
 
 // @interface SFMCSdkDeliverOrderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkDeliverOrderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -754,7 +778,10 @@ interface SFMCSdkEventBus
 }
 
 // @interface SFMCSdkExchangeOrderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkExchangeOrderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -791,7 +818,10 @@ interface SFMCSdkFakeEvent : SFMCSdkEvent
 }
 
 // @interface SFMCSdkFavoriteCatalogObjectEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkFavoriteCatalogObjectEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
@@ -2814,7 +2844,10 @@ interface SFMCSdkPersonalization
 }
 
 // @interface SFMCSdkPreorderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkPreorderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -2824,7 +2857,10 @@ interface SFMCSdkPreorderEvent
 }
 
 // @interface SFMCSdkPurchaseOrderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkPurchaseOrderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -2977,7 +3013,10 @@ interface SFMCSdkPushURLHandlingEvent
 }
 
 // @interface SFMCSdkQuickViewCatalogObjectEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkQuickViewCatalogObjectEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
@@ -3003,7 +3042,10 @@ interface SFMCSdkQuietPushEnabledEvent
 }
 
 // @interface SFMCSdkRemoveFromCartEvent : SFMCSdkCartEvent
+// initWithLineItem: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCartEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkRemoveFromCartEvent
 {
 	// -(instancetype _Nonnull)initWithLineItem:(SFMCSdkLineItem * _Nonnull)lineItem __attribute__((objc_designated_initializer));
@@ -3013,7 +3055,10 @@ interface SFMCSdkRemoveFromCartEvent
 }
 
 // @interface SFMCSdkReplaceCartEvent : SFMCSdkCartEvent
+// initWithLineItems: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCartEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkReplaceCartEvent
 {
 	// -(instancetype _Nonnull)initWithLineItems:(NSArray<SFMCSdkLineItem *> * _Nonnull)lineItems __attribute__((objc_designated_initializer));
@@ -3023,7 +3068,10 @@ interface SFMCSdkReplaceCartEvent
 }
 
 // @interface SFMCSdkReturnOrderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkReturnOrderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -3033,7 +3081,10 @@ interface SFMCSdkReturnOrderEvent
 }
 
 // @interface SFMCSdkReviewCatalogObjectEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkReviewCatalogObjectEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
@@ -3369,7 +3420,10 @@ interface SFMCSdkSessionManager : SessionManagerProtocol
 }
 
 // @interface SFMCSdkShareCatalogObjectEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkShareCatalogObjectEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
@@ -3379,7 +3433,10 @@ interface SFMCSdkShareCatalogObjectEvent
 }
 
 // @interface SFMCSdkShipOrderEvent : SFMCSdkOrderEvent
+// initWithOrder: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkOrderEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkShipOrderEvent
 {
 	// -(instancetype _Nonnull)initWithOrder:(SFMCSdkOrder * _Nonnull)order __attribute__((objc_designated_initializer));
@@ -3561,7 +3618,10 @@ interface SFMCSdkURLType
 }
 
 // @interface SFMCSdkViewCatalogObjectDetailEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkViewCatalogObjectDetailEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
@@ -3571,7 +3631,10 @@ interface SFMCSdkViewCatalogObjectDetailEvent
 }
 
 // @interface SFMCSdkViewCatalogObjectEvent : SFMCSdkCatalogObjectEvent
+// initWithCatalogObject: is the only initializer. The inherited -init is SWIFT_UNAVAILABLE on
+// SFMCSdkEngagementEvent and traps in swift_stdlib_reportUnimplementedInitializer.
 [BaseType (typeof(SFMCSdkCatalogObjectEvent))]
+[DisableDefaultCtor]
 interface SFMCSdkViewCatalogObjectEvent
 {
 	// -(instancetype _Nonnull)initWithCatalogObject:(SFMCSdkCatalogObject * _Nonnull)catalogObject __attribute__((objc_designated_initializer));
