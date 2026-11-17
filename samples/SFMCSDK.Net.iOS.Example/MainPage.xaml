@@ -6,10 +6,10 @@
     <ScrollView>
         <VerticalStackLayout Padding="24,16" Spacing="12">
 
-            <Label Text="SFMCSDK.Net.Android"
+            <Label Text="SFMCSDK.Net.iOS"
                    FontSize="24" FontAttributes="Bold"
                    SemanticProperties.HeadingLevel="Level1" />
-            <Label Text="Drives the raw sfmcsdk binding: initialization, identity and event tracking. No credentials are baked in - the SDK runs against no tenant, so server calls fail by design; what this shows is the binding surface working."
+            <Label Text="Drives the raw SFMCSDK binding: initialization, identity and event tracking. No credentials are baked in - the SDK runs against no tenant, so server calls fail by design; what this shows is the binding surface working."
                    FontSize="13" />
 
             <Button x:Name="InitializeButton"

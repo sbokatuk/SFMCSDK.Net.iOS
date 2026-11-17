@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  Simulator only - see the comment in the project file. The value is the bundle identifier.
+	  An app that ships to devices keeps the usual $(AppIdentifierPrefix)$(CFBundleIdentifier)
+	  form in its Entitlements.plist instead; its provisioning profile supplies the prefix.
+	-->
+	<key>keychain-access-groups</key>
+	<array>
+		<string>com.sbokatuk.sfmcsdknet.example</string>
+	</array>
+</dict>
+</plist>
