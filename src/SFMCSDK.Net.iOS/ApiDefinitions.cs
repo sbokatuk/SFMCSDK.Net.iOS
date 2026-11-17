@@ -251,7 +251,9 @@ interface SFMCSdkBehavior
 
 // @interface SFMCSdkAppBackgrounded : SFMCSdkBehavior
 // No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
-// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
 [DisableDefaultCtor]
 interface SFMCSdkAppBackgrounded
@@ -260,7 +262,9 @@ interface SFMCSdkAppBackgrounded
 
 // @interface SFMCSdkAppBecameActive : SFMCSdkBehavior
 // No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
-// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
 [DisableDefaultCtor]
 interface SFMCSdkAppBecameActive
@@ -269,7 +273,9 @@ interface SFMCSdkAppBecameActive
 
 // @interface SFMCSdkAppForegrounded : SFMCSdkBehavior
 // No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
-// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
 [DisableDefaultCtor]
 interface SFMCSdkAppForegrounded
@@ -278,7 +284,9 @@ interface SFMCSdkAppForegrounded
 
 // @interface SFMCSdkAppTerminated : SFMCSdkBehavior
 // No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
-// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
 [DisableDefaultCtor]
 interface SFMCSdkAppTerminated
@@ -287,7 +295,9 @@ interface SFMCSdkAppTerminated
 
 // @interface SFMCSdkAppVersionChanged : SFMCSdkBehavior
 // No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
-// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
 [DisableDefaultCtor]
 interface SFMCSdkAppVersionChanged
@@ -297,7 +307,9 @@ interface SFMCSdkAppVersionChanged
 // SWIFT_CLASS_NAMED("AppWillResignActive")
 // @interface SFMCSdkAppWillResignActive : SFMCSdkBehavior
 // No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
-// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
 [DisableDefaultCtor]
 interface SFMCSdkAppWillResignActive
@@ -3348,7 +3360,9 @@ interface SFMCSdkLogger : Logger
 
 // @interface SFMCSdkScreenEntry : SFMCSdkBehavior
 // No init of its own, and SFMCSdkBehavior's is SWIFT_UNAVAILABLE: the inherited -init traps in
-// swift_stdlib_reportUnimplementedInitializer. The SDK creates these; .NET only receives them.
+// swift_stdlib_reportUnimplementedInitializer. The SDK creates these for its own observers. The
+// Objective-C surface has no call that registers an SFMCSdkBehaviorObserver, so .NET neither
+// constructs nor receives one today.
 [BaseType (typeof(SFMCSdkBehavior))]
 [DisableDefaultCtor]
 interface SFMCSdkScreenEntry
