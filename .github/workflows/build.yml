@@ -287,7 +287,9 @@ jobs:
   e2e:
     name: simulator smoke test (${{ matrix.target-framework }})
     if: ${{ inputs.verify }}
-    timeout-minutes: 45
+    # 60, not 45: the net8 leg's Release build of the device tests alone has taken 30 to 37
+    # minutes on macos-15, and one green run finished 9 seconds short of a 45-minute limit.
+    timeout-minutes: 60
     needs: pack
     runs-on: macos-15
     strategy:
