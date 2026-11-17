@@ -21,8 +21,9 @@ public static class SmokeTests
 
     /// <summary>
     /// How long initialization may take before it counts as not having happened. Measured on a
-    /// simulator: the completion block arrives 4-18 ms after the call, on 4.0.1 and on 5.0.0, on
-    /// every target framework. The budget is for a loaded CI runner, not for the SDK.
+    /// simulator: the completion block typically arrives 4-13 ms after the call on 5.0.0 (net8,
+    /// net9 and net10) and 6-7 ms on 4.0.1 (net9 and net10; net8 was not measured there). The
+    /// budget is for a loaded CI runner, not for the SDK.
     /// </summary>
     private static readonly TimeSpan InitializationBudget = TimeSpan.FromSeconds(30);
 
