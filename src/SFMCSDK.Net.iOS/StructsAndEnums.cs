@@ -1,8 +1,8 @@
 //
 // StructsAndEnums.cs
 //
-// Hand-maintained binding for SFMCSDK (sfmc-sdk-ios) 4.0.1.
-// Updated by diffing SFMCSDK-Swift.h between releases (1.1.3 -> 4.0.1).
+// Hand-maintained binding for SFMCSDK (sfmc-sdk-ios) 5.0.0.
+// Updated by diffing SFMCSDK-Swift.h between releases (1.1.3 -> 4.0.1 -> 5.0.0).
 // Do NOT regenerate with Objective Sharpie; edit by hand against the header diff.
 //
 
@@ -24,6 +24,16 @@ namespace SFMCSDK
 		Triggered = 2,
 		ValidationError = 3,
 		Presented = 4
+	}
+
+	[Native]
+	public enum SFMCInboxAnalyticsType : long
+	{
+		Download = 0,
+		Open = 1,
+		Delete = 2,
+		Read = 3,
+		Interacted = 4
 	}
 
 	[Native]
@@ -56,6 +66,21 @@ namespace SFMCSDK
 	}
 
 	[Native]
+	public enum SFMCSdkAppState : long
+	{
+		Terminated = 0,
+		Foreground = 1,
+		Background = 2
+	}
+
+	[Native]
+	public enum SFMCSdkBadgeChannel : long
+	{
+		Push = 0,
+		Inbox = 1
+	}
+
+	[Native]
 	public enum SFMCSdkBehaviorType : long
 	{
 		AppBecameActive = 0,
@@ -63,7 +88,8 @@ namespace SFMCSDK
 		AppBackgrounded = 2,
 		AppVersionChanged = 3,
 		ScreenEntry = 4,
-		AppTerminated = 5
+		AppTerminated = 5,
+		AppWillResignActive = 6
 	}
 
 	[Native]
@@ -99,7 +125,9 @@ namespace SFMCSDK
 		PushFeature = 3,
 		MobileAppMessaging = 4,
 		InappMessaging = 5,
-		FlushEvents = 6
+		// 5.0.0 inserted InboxFeature here and moved FlushEvents from 6 to 7.
+		InboxFeature = 6,
+		FlushEvents = 7
 	}
 
 	[Native]
@@ -206,6 +234,38 @@ namespace SFMCSDK
 	}
 
 	[Native]
+	public enum SFMCSdkInboxDataFailedReason : long
+	{
+		ApiFetchFailed = 0,
+		MigrationFailed = 1,
+		ThrottleBlock = 2
+	}
+
+	[Native]
+	public enum SFMCSdkInboxDataRequestTrigger : long
+	{
+		Initialization = 0,
+		AppForeground = 1,
+		PushClick = 2,
+		UserRefresh = 3
+	}
+
+	[Native]
+	public enum SFMCSdkInboxInteractionType : long
+	{
+		Cta = 0,
+		Button = 1
+	}
+
+	[Native]
+	public enum SFMCSdkInboxMessageType : long
+	{
+		Legacy = 0,
+		Advanced = 1,
+		Pcti = 2
+	}
+
+	[Native]
 	public enum SFMCSdkLogLevel : long
 	{
 		Debug = 0,
@@ -246,7 +306,8 @@ namespace SFMCSDK
 		Personalization = 3,
 		PushFeature = 4,
 		MobileAppMessaging = 5,
-		InappMessagingFeature = 6
+		InappMessagingFeature = 6,
+		InboxFeature = 7
 	}
 
 	[Native]
@@ -257,7 +318,8 @@ namespace SFMCSDK
 		Personalization = 2,
 		PushFeature = 3,
 		MobileAppMessaging = 4,
-		InappMessagingFeature = 5
+		InappMessagingFeature = 5,
+		InboxFeature = 6
 	}
 
 	[Native]
@@ -292,5 +354,13 @@ namespace SFMCSDK
 	public enum SFMCSdkTraceEventType : long
 	{
 		Debug = 0
+	}
+
+	[Native]
+	public enum SFMCWrapperName : long
+	{
+		ReactNative = 0,
+		Flutter = 1,
+		Cordova = 2
 	}
 }

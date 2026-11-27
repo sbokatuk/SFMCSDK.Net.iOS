@@ -28,6 +28,27 @@
   </PropertyGroup>
 
   <!--
+    Keychain access on the simulator, for the net8 and net9 legs.
+
+    The native SDK keeps its encryption keys in the keychain and does not initialize without it:
+    initializeSdk returns, nothing comes up, the completion block is never called and identity
+    edits are never applied - silently. On the simulator the keychain answers
+    errSecMissingEntitlement (-34018) to an app that carries no entitlements, and the .NET 8 and
+    .NET 9 iOS workloads build simulator apps exactly that way: linker-signed, nothing embedded.
+    The .NET 10 workload embeds simulated entitlements on its own, which is why the same test
+    used to behave differently per target framework and the difference was put down to the SDK.
+
+    So the simulator build is given one entitlement of its own. CodesignRequireProvisioningProfile
+    is off because asking for entitlements otherwise makes the .NET 8/9 workloads look for a
+    provisioning profile, and a CI runner has none. A device build is not affected: it is signed
+    with a real profile, which always carries the application identifier the keychain wants.
+  -->
+  <PropertyGroup Condition=" '$(RuntimeIdentifier)' == '' Or $(RuntimeIdentifier.StartsWith('iossimulator')) ">
+    <CodesignEntitlements>Entitlements.Simulator.plist</CodesignEntitlements>
+    <CodesignRequireProvisioningProfile>false</CodesignRequireProvisioningProfile>
+  </PropertyGroup>
+
+  <!--
     The e2e deliberately consumes the packed NuGet from ./artifacts rather than a
     ProjectReference, so it exercises the artifact that actually gets published. See NuGet.config
     for the local feed.
