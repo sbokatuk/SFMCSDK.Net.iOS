@@ -124,7 +124,19 @@ Merging a file named `docs/release-notes/<four-part-version>.md` to `main` **is*
 
 **`SFMCSDK.xcframework is missing`.** Run `./build/FetchXcFrameworks.sh` — nothing native is committed, and packing does not fetch.
 
-**`InitializeSdk`'s completion never fires, and identity edits do nothing, on a simulator.** The native SDK keeps its keys in the keychain and does not initialize without it — silently. A simulator app that carries no entitlements is refused the keychain (`errSecMissingEntitlement`, -34018), and that is how the .NET 8 and .NET 9 iOS workloads build one; the .NET 10 workload embeds simulated entitlements by itself, so the same app works there. Give the app an `Entitlements.plist` with a `keychain-access-groups` entry — the sample and the device tests in this repository show a simulator-only variant, with `CodesignRequireProvisioningProfile` off so that no provisioning profile is needed. A device build is signed with a profile and is not affected.
+**`InitializeSdk`'s completion never fires, and identity edits do nothing, on a simulator.** The native SDK keeps its keys in the keychain and does not initialize without it — silently. A simulator app that carries no entitlements is refused the keychain (`errSecMissingEntitlement`, -34018), and that is how the .NET 8 and .NET 9 iOS workloads build one; the .NET 10 workload embeds simulated entitlements by itself, so the same app works there. Give simulator builds one entitlement, a `keychain-access-groups` array holding your bundle identifier, in a file of its own such as `Platforms/iOS/Entitlements.Simulator.plist`, and point the build at it for simulator runtime identifiers only:
+
+```xml
+<Target Name="UseSimulatorKeychainEntitlement" BeforeTargets="BuildOnlySettings"
+        Condition="$(RuntimeIdentifier.StartsWith('iossimulator'))">
+  <PropertyGroup>
+    <CodesignEntitlements>$(MSBuildProjectDirectory)/Platforms/iOS/Entitlements.Simulator.plist</CodesignEntitlements>
+    <CodesignRequireProvisioningProfile>false</CodesignRequireProvisioningProfile>
+  </PropertyGroup>
+</Target>
+```
+
+`CodesignRequireProvisioningProfile` is off because asking for entitlements otherwise sends the .NET 8 and .NET 9 workloads looking for a provisioning profile. Use a target, not a `PropertyGroup` with the same condition: the iOS SDK chooses the default runtime identifier (a simulator for `dotnet build`, `ios-arm64` for `dotnet publish`) after the project's properties are evaluated, so a property condition cannot tell a simulator build from a device publish without `-r`, and would give the device build the simulator's entitlements. Device builds keep their own entitlements: the provisioning profile carries what the keychain needs. If the app already has a `Platforms/iOS/Entitlements.plist`, the simulator file replaces it on simulator builds, so copy its entries into the simulator file as well. The [sample](https://github.com/sbokatuk/SFMCSDK.Net.iOS/tree/main/samples/SFMCSDK.Net.iOS.Example) and the device tests do this. In 5.0.0.1 they used such a property group instead, so if you copied it from them, replace it with the target.
 
 **A module stays inactive after upgrading to 5.x.** SFMCSDK 5.0.0 only accepts MobilePush 12.x (see [Packages](#packages)); `SFMCSdk.State` prints the range each module must fall in.
 
